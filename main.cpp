@@ -8,6 +8,7 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 #define DELAYVAL 250 // Time (in milliseconds) to pause between pixels
 
+// Recupere la position du pointeur
 int Convert (int x, int y){
   int val_return = x + 8*y;
   return(val_return);
@@ -78,8 +79,6 @@ bool tableau7 = false;
 bool tableau8 = false;
 bool tableau9 = false;
 
-bool is_empty = true;
-
 int joueur = 0;
 
 
@@ -122,35 +121,30 @@ void loop(){
     Serial.println(val_x);
     Serial.println(val_y);
     for(x = 0; x <4; x++){
+      // Verifie dans quelle case est le joueur
       if(tableau_1[x] == valeur){
+        // Verifie si la case ou il est est vide
         if(pixels.getPixelColor(Convert((val_x + 1), val_y)) == 0 || pixels.getPixelColor(Convert((val_x - 1), val_y)) == 0|| pixels.getPixelColor(Convert(val_x, (val_y + 1))) == 0 || pixels.getPixelColor(Convert(val_x, (val_y - 1))) == 0){
           tableau1 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[0][0] = 1;
           }else{
             tab2[0][0] = 1;
           }
-        }else{
-          is_empty = true;
         }
-
       }
       if(tableau_2[x] == valeur){
         if(pixels.getPixelColor(Convert((val_x + 1), val_y)) == 0 || pixels.getPixelColor(Convert((val_x - 1), val_y)) == 0|| pixels.getPixelColor(Convert(val_x, (val_y + 1))) == 0 || pixels.getPixelColor(Convert(val_x, (val_y - 1))) == 0){
           tableau2 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[0][1] = 1;
           }else{
             tab2[0][1] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_3[x] == valeur){
@@ -158,14 +152,11 @@ void loop(){
           tableau3 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[0][2] = 1;
           }else{
             tab2[0][2] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_4[x] == valeur){
@@ -173,14 +164,11 @@ void loop(){
           tableau4 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[1][0] = 1;
           }else{
             tab2[1][0] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_5[x] == valeur){
@@ -188,14 +176,11 @@ void loop(){
           tableau5 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[1][1] = 1;
           }else{
             tab2[1][1] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_6[x] == valeur){
@@ -203,14 +188,11 @@ void loop(){
           tableau6 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[1][2] = 1;
           }else{
             tab2[1][2] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_7[x] == valeur){
@@ -218,14 +200,11 @@ void loop(){
           tableau7 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[2][0] = 1;
           }else{
             tab2[2][0] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_8[x] == valeur){
@@ -233,14 +212,11 @@ void loop(){
           tableau8 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[2][1] = 1;
           }else{
             tab2[2][1] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
       if(tableau_9[x] == valeur){
@@ -248,20 +224,17 @@ void loop(){
           tableau9 = true;
           val_x = 3;
           val_y = 3;
-          is_empty = false;
           if(joueur == 0){
             tab[2][2] = 1;
           }else{
             tab2[2][2] = 1;
           }
-        }else{
-          is_empty = true;
         }
       }
     }
   }
 
-  
+  // Change le joueur et fait que la case qui vient detre prise ne puisse pas etre reprise une autre fois
   if(tableau1){
     if(joueur == 0){
       joueur = 1;
@@ -541,44 +514,22 @@ void loop(){
   if(analogRead(A0)<1000 && analogRead(A0)>100){
     pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
   }else if(analogRead(A0)>=100){
+    // Pour pas depasser du terrain
     if(val_x >= 7){
       }else{
-        // ON VERIFIE QUE CEST PAS ROUGE
-        if(pixels.getPixelColor(Convert((val_x + 1),val_y)) == pixels.getPixelColor(2)){
-          //Serial.println("chack rouge");
-          next_rouge = true;
-          }else{
-            //Serial.println("check pas rouge");
-            next_rouge = false;
-          }
         val_x += 1;
-        if(next_rouge){
-          pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(150,0,0));
-        }else{
-          pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
-        }
+        pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
         if(pixels.getPixelColor(Convert((val_x - 1), val_y)) != pixels.getPixelColor(2)){
           pixels.setPixelColor(Convert((val_x - 1), val_y), pixels.Color(0,0,0));
         }
       }
 
     }else if(analogRead(A0)<= 100){
+    // POur pas depasser du terrain
     if(val_x <= 0){
     }else{
-      // ON VERIFIE QUE CEST PAS ROUGE
-      if(pixels.getPixelColor(Convert((val_x - 1),val_y)) == pixels.getPixelColor(2)){
-        //Serial.println("chack rouge");
-        next_rouge = true;
-        }else{
-          //Serial.println("check pas rouge");
-          next_rouge = false;
-        }
       val_x -= 1;
-      if(next_rouge){
-        pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(150,0,0));
-      }else{
-        pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
-      }
+      pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
       if(pixels.getPixelColor(Convert((val_x + 1), val_y)) != pixels.getPixelColor(2)){
         pixels.setPixelColor(Convert((val_x + 1), val_y), pixels.Color(0,0,0));
       }
@@ -591,20 +542,8 @@ void loop(){
     }else if(analogRead(A1)>=1000){
       if(val_y >= 7){
         }else{
-          // ON VERIFIE QUE CEST PAS ROUGE
-          if(pixels.getPixelColor(Convert(val_x,(val_y + 1))) == pixels.getPixelColor(2)){
-            //Serial.println("chack rouge");
-            next_rouge = true;
-            }else{
-              //Serial.println("check pas rouge");
-              next_rouge = false;
-            }
           val_y += 1;
-          if(next_rouge){
-            pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(150,0,0));
-          }else{
-            pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
-          }
+          pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
           if(pixels.getPixelColor(Convert(val_x, (val_y - 1))) != pixels.getPixelColor(2)){
             pixels.setPixelColor(Convert(val_x, (val_y - 1)), pixels.Color(0,0,0));
           }
@@ -613,22 +552,8 @@ void loop(){
       }else if(analogRead(A1)<= 100){
       if(val_y <= 0){
       }else{
-        // ON VERIFIE QUE CEST PAS ROUGE
-        if(pixels.getPixelColor(Convert(val_x,(val_y - 1))) == pixels.getPixelColor(2)){
-          //Serial.println("chack rouge");
-          next_rouge = true;
-          }else{
-            //Serial.println("check pas rouge");
-            next_rouge = false;
-          }
         val_y -= 1;
-        if(next_rouge){
-          pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(150,0,0));
-          retour_rouge = true;
-        }else{
-          pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
-          retour_rouge = false;
-        }
+        pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
         if(pixels.getPixelColor(Convert(val_x, (val_y + 1))) != pixels.getPixelColor(2)){
           pixels.setPixelColor(Convert(val_x, (val_y + 1)), pixels.Color(0,0,0));
         }
