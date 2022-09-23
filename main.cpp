@@ -54,6 +54,7 @@ bool retour_rouge = false;
 int tableau[3][4] = {{0,1,8,9},{3,4,11,12},{6,7,14,15},
 };
 
+// Initialisation de toutes les cases disponibles
 int tableau_1[4] = {0,1,8,9};
 int tableau_2[4] = {3,4,11,12};
 int tableau_3[4] = {6,7,14,15};
@@ -65,6 +66,7 @@ int tableau_6[4] = {30,31,38,39};
 int tableau_7[4] = {48,49,56,57};
 int tableau_8[4] = {51,52,59,60};
 int tableau_9[4] = {54,55,62,63};
+// Initialisation des cases "en possession" des joueurs
 int tab[3][3];
 int tab2[3][3];
 
@@ -510,7 +512,7 @@ void loop(){
   }
 
 
-// ------------------------------------- AXE X ---------------------------------------------------//
+// ------------------------------------- DEPLACEMENT AXE X ---------------------------------------------------//
   if(analogRead(A0)<1000 && analogRead(A0)>100){
     pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
   }else if(analogRead(A0)>=100){
@@ -518,7 +520,9 @@ void loop(){
     if(val_x >= 7){
       }else{
         val_x += 1;
+        //Change la couleur de la position actuel du pointeur
         pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
+        //SI la position précédente du pointeur n'est pas rouge, alors on la "vide" en la rendant blanche
         if(pixels.getPixelColor(Convert((val_x - 1), val_y)) != pixels.getPixelColor(2)){
           pixels.setPixelColor(Convert((val_x - 1), val_y), pixels.Color(0,0,0));
         }
@@ -536,7 +540,7 @@ void loop(){
     }
   }
 
-// ------------------------------------- AXE y ---------------------------------------------------//
+// ------------------------------------- DEPLACEMENT AXE y ---------------------------------------------------//
   if(analogRead(A1)<1000 && analogRead(A1)>100){
       pixels.setPixelColor(Convert(val_x,val_y), pixels.Color(0,0,150));
     }else if(analogRead(A1)>=1000){
@@ -570,8 +574,7 @@ void loop(){
 
 
 
-  /*
-  -------------------------------------------------------------------------------------------------------------------------------
+  /*----------------------------- COURS D'ELECS -------------------------------------------------------------------------------------------------------------------------------
   Serial.println(analogRead(A0));
   Serial.println(analogRead(A1));
   analogWrite(10, (analogRead(A0)/4));
